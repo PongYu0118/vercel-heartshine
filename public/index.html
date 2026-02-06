@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>心晴 - 情緒陪伴軟件</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- face-api.js 模型載入 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js/dist/face-api.min.js"></script>
+  <!-- 你的主邏輯 -->
+  <script defer src="main.js"></script>
+
+  <!-- 內嵌樣式（溫柔藍綠調 + 危機警示紅色） -->
+  <style>
+    body {
+      background: linear-gradient(to bottom, #e0f7fa, #b3e5fc);
+      font-family: "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #004d40;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      color: #00796b;
+      margin: 0;
+      font-size: 3em;
+    }
+    .intro {
+      font-size: 1.2em;
+      color: #00695c;
+      margin: 10px 0 20px;
+    }
+    main {
+      display: flex;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .left-panel {
+      flex: 1;
+      text-align: center;
+    }
+    video {
+      width: 100%;
+      max-width: 500px;
+      border: 5px solid #26a69a;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .button-group {
+      margin-top: 20px;
+    }
+    button {
+      background: #009688;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #00796b;
+    }
+    .right-panel {
+      flex: 1;
+      background: rgba(255,255,255,0.9);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    #chatContainer {
+      height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 15px;
+    }
+    .message-bubble {
+      margin: 10px 0;
+      padding: 12px 18px;
+      border-radius: 18px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    .user-bubble {
+      background: #e0f7fa;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .ai-bubble {
+      background: #c8e6c9;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
+    .emotion-note {
+      font-size: 0.8em;
+      color: #555;
+      margin-top: 5px;
+    }
+    .crisis-alert {
+      background: #ef5350;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.3em;
+      text-align: center;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* 文字輸入框樣式 */
+    #chatInput {
+      flex: 1;
+      padding: 12px;
+      font-size: 1.1em;
+      border: 2px solid #26a69a;
+      border-radius: 10px;
+      outline: none;
+    }
+    #chatInput:focus {
+      border-color: #00796b;
+      box-shadow: 0 0 8px rgba(0,121,107,0.3);
+    }
+    #sendBtn {
+      background: #009688;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #sendBtn:hover {
+      background: #00796b;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>心晴</h1>
+    <p class="intro">你的本地情緒陪伴夥伴<br>畢業專案 by samuel | 香港廣東話優先 | 完全本地運行，資料不外傳</p>
+    <div class="intro">
+      <small>實時臉部情緒偵測 + 溫柔陪伴 + 危機提醒（撒瑪利亞會 2389 2222）</small>
+    </div>
+  </header>
+
+  <main>
+    <div class="left-panel">
+      <video id="videoFeed" autoplay muted></video>
+      <div class="button-group">
+        <button id="recordBtn">開始傾偈啦</button>
+        <button id="doneBtn" style="display: none">講完喇</button>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div id="chatContainer" class="chat-container">
+        <!-- 聊天訊息會動態加進來 -->
+      </div>
+
+      <!-- 文字輸入區 -->
+      <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <input type="text" id="chatInput" placeholder="輸入文字傾偈啦..." />
+        <button id="sendBtn" onclick="sendTextMessage()">送出</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
